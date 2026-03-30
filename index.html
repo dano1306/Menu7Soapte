@@ -5,17 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Meniu 7 Șoapte</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; padding-bottom: 80px; }
     
     #antet { text-align: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px dashed #2e7d32;}
     #antet h1 { color: #2e7d32; margin-bottom: 5px; font-size: 28px; }
     .subtitle { font-style: italic; color: #555; margin: 5px 0 15px 0; font-size: 15px; }
     
-    /* Caseta nouă pentru program */
     .program-detaliat { background-color: #fff3e0; padding: 15px; border-radius: 8px; border: 1px solid #ffcc80; text-align: center; font-size: 15px; margin-bottom: 20px;}
     .program-detaliat p { margin: 5px 0; color: #d35400; }
 
-    /* Noua secțiune mare pentru cameră/masă */
     .selector-camera { background-color: #e8f5e9; padding: 20px; border-radius: 10px; border: 2px solid #2e7d32; margin-bottom: 30px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
     .selector-camera label { display: block; font-size: 18px; font-weight: bold; color: #2e7d32; margin-bottom: 10px; }
     #numar-camera { width: 100%; padding: 15px; font-size: 18px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; text-align: center; font-weight: bold; color: #333; }
@@ -29,11 +27,36 @@
     .eticheta-data { display: block; margin-top: 10px; font-size: 12px; font-weight: bold; color: #d35400; }
     .input-data { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 14px; }
 
-    button { background-color: #f39c12; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; min-width: 80px;}
-    #cos { margin-top: 40px; padding: 20px; background-color: #f9f9f9; border-radius: 10px; border: 1px solid #ddd; }
-    #btn-whatsapp { background-color: #25D366; width: 100%; padding: 15px; font-size: 16px; margin-top: 15px; border-radius: 8px; color: white;}
+    button.btn-adauga { background-color: #f39c12; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; min-width: 80px;}
     
     .info-box { background-color: #e8f5e9; padding: 10px; border-radius: 5px; border-left: 4px solid #2e7d32; margin: 15px 0; font-size: 14px;}
+
+    /* --- NOUL DESIGN PENTRU COȘUL LATERAL --- */
+    
+    /* Butonul rotund plutitor */
+    #cart-button { position: fixed; bottom: 20px; right: 20px; background-color: #2e7d32; color: white; border-radius: 50%; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; font-size: 26px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.4); z-index: 1000; transition: transform 0.2s; }
+    #cart-button:active { transform: scale(0.9); }
+    #cart-badge { position: absolute; top: -5px; right: -5px; background-color: #e74c3c; color: white; border-radius: 50%; padding: 3px 8px; font-size: 13px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+    
+    /* Panoul lateral din dreapta */
+    #cart-panel { position: fixed; top: 0; right: -350px; width: 320px; max-width: 100%; height: 100vh; background-color: white; box-shadow: -5px 0 15px rgba(0,0,0,0.2); transition: right 0.3s ease-in-out; z-index: 1001; padding: 20px; box-sizing: border-box; overflow-y: auto; display: flex; flex-direction: column; }
+    #cart-panel.open { right: 0; }
+    
+    .inchide-cos { background: none; border: none; color: #e74c3c; font-size: 16px; font-weight: bold; cursor: pointer; text-align: left; padding: 0 0 15px 0; margin-bottom: 10px; border-bottom: 1px solid #eee; width: 100%; }
+    
+    .sumar-categorii { background-color: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ddd; }
+    .sumar-categorii p { margin: 5px 0; font-size: 15px; font-weight: bold; color: #333; }
+    
+    #lista-cos { flex-grow: 1; padding-left: 0; list-style: none; margin-top: 0; }
+    #lista-cos li { border-bottom: 1px dashed #ccc; padding: 10px 0; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+    .btn-sterge { background-color: #e74c3c; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer; margin-left: 10px; font-weight: bold;}
+    
+    .total-container { font-size: 18px; margin-top: 15px; border-top: 2px solid #2e7d32; padding-top: 15px; text-align: center;}
+    #btn-whatsapp { background-color: #25D366; width: 100%; padding: 15px; font-size: 16px; margin-top: 15px; border-radius: 8px; color: white; font-weight: bold; border: none; cursor: pointer;}
+    
+    /* Fundalul închis la culoare când e deschis coșul */
+    #overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; }
+    #overlay.active { display: block; }
   </style>
 </head>
 <body>
@@ -64,7 +87,7 @@
       <label class="eticheta-data" for="data-mic-dejun">DATA (Perioada dorită):</label>
       <input type="text" id="data-mic-dejun" class="input-data" placeholder="Ex: 15-18 August">
     </div>
-    <button onclick="adaugaInCos('Mic Dejun', 59)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Mic Dejun', 59, 'mancare')">Adaugă</button>
   </div>
 
   <h2>ZĂMURI 🍲</h2>
@@ -72,37 +95,33 @@
   <div class="produs">
     <div class="detalii">
       <h3>Zamă Acră de Pasăre cu Lasce (Tăieței)</h3>
-      <p>(carne de pui 70g, ceapă 20g, morcovi 20g, țelină 20g, păstârnac 20g, ardei gras verde 15g, ardei gras roșu 15g, cartofi 20g, suc de roșii, leuștean, sare și piper, pentru înăcrit - borș: 10g, apă; tăieței/lasce: ou, făină, sare) = calorii 153.7, Proteine: 20%, Carbohidrați: 25%, Grăsimi: 55% / 100g (Calorii: 225 kj / 53.7 kCal, Grăsimi: 3.3 g, Carbohidrați: 3.3 g, Fibre: 0.5 g, Proteine: 2.7g) – Alergeni = gluten, țelină, ou.</p>
       <p style="margin-top: 5px;"><strong>28 LEI / 450G</strong></p>
     </div>
-    <button onclick="adaugaInCos('Zama Acra de Pasare', 28)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Zama Acra de Pasare', 28, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>„Zupă Mincinoasă” (Ciorbă de Legume)</h3>
-      <p>(20g ceapă, 10g morcov, 5g ardei, 20g cartof, 5g roșii, 5g fasole verde, ulei, pătrunjel verde, leuștean, sare și piper, pentru înăcrit - borș, apă) = calorii 46.1, Proteine: 14%, Carbohidrați: 45%, Grăsimi: 41% / 100g (Calorii: 193 kj/46.1 kCal, Grăsimi: 2.1 g, Carbohidrați: 5.2 g, Proteine: 1.6 g) – Alergeni = gluten, țelină.</p>
       <p style="margin-top: 5px;"><strong>25 LEI / 450G</strong></p>
     </div>
-    <button onclick="adaugaInCos('Ciorba de Legume', 25)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Ciorba de Legume', 25, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Supă Ardelenească de Pui cu Tarhon</h3>
-      <p>(carne de pui 70g, ceapă 20g, morcovi 20g, țelină 20g, păstârnac 20g, ardei gras roșu 10g, mazăre 15g, sare și piper, pentru înăcrit-oțet, smântână min 20% 10g, tarhon 3g, apă, crutoane=pâine/aromă usturoi 50g) = calorii 27.7 kCal, Proteine: 35%, Carbohidrați: 10%, Grăsimi: 55% (/100g=Calorii 116 kj / 27.7 kCal Grăsimi: 1.7g, Carbohidrați: 0.7g, Proteine: 2.4g) – Alergeni: gluten, țelină, smântână.</p>
       <p style="margin-top: 5px;"><strong>29 LEI / 450G</strong></p>
     </div>
-    <button onclick="adaugaInCos('Supa Ardeleneasca', 29)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Supa Ardeleneasca', 29, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Supă de Tarhon cu Afumătură</h3>
-      <p>(carne de porc, rasol sau coaste afumate 70g, ceapă 20g, morcovi 20g, țelină 10g, păstârnac 10g, cartofi 30g, sare și piper, pentru înăcrit-oțet 2g, smântână min 20% 10g, tarhon 3g, apă) = calorii 53.7, Proteine: 20%, Carbohidrați: 25%, Grăsimi: 55% / 100g (Calorii: 225 kj / 53.7 kCal, Grăsimi: 3.3 g, Carbohidrați: 3.3 g, Fibre: 0.5 g, Proteine: 2.7g) – Alergeni = gluten, țelină, smântână.</p>
       <p style="margin-top: 5px;"><strong>29 LEI / 450G</strong></p>
     </div>
-    <button onclick="adaugaInCos('Supa cu Afumatura', 29)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Supa cu Afumatura', 29, 'mancare')">Adaugă</button>
   </div>
 
   <h2>FELURI PRINCIPALE / Porc 🥩</h2>
@@ -110,46 +129,41 @@
   <div class="produs">
     <div class="detalii">
       <h3>Mici, cartofi prăjiți și muștar</h3>
-      <p>(4 bucăți, carne tocată de vită și porc 240g, cartofi 150g, muștar 50g) = calorii 104, Proteine: 81%, Carbohidrați: 2%, Grăsimi: 17% / 100g (Calorii: 435 kj / 104 kCal, Grăsimi: 2 g din care Saturate: 0.9 g, Carbohidrați: 0.5 g din care Zaharuri: 0.2 g, Fibre: 0.2 g, Proteine: 21 g, Sare: 100 mg) – Alergeni = gluten, muștar.</p>
       <p style="margin-top: 5px;"><strong>47 LEI / 400g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Mici cu cartofi', 47)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Mici cu cartofi', 47, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Ceafă de porc la grill, cartofi prăjiți</h3>
-      <p>(ceafă porc 180g, sare, piper, cartofi 200g, ulei de palmier, varză albă 100g, ulei, oțet din vin) = calorii 104, Proteine: 81%, Carbohidrați: 2%, Grăsimi: 17% / 100g (Calorii: 435 kj/ 104 kCal, Grăsimi: 2 g din care Saturate: 0.9 g, Carbohidrați: 0.5 g din care Zaharuri: 0.2 g, Fibre: 0.2 g, Proteine: 21 g, Sare: 100 mg) – Alergeni = gluten.</p>
       <p style="margin-top: 5px;"><strong>59 LEI / 400g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Ceafa grill cu cartofi', 59)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Ceafa grill cu cartofi', 59, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Tochitură, mămăligă, ou și brânză</h3>
-      <p>(carne de porc 180g, cârnați afumați 70g, pastă de roșii, suc de roșii 50g, ulei, usturoi, sare, piper și cimbru, brânză telemea vacă 50g, ou 50g, mămăligă 100g), = calorii 389, Proteine: 26%, Carbohidrați: 1%, Grăsimi: 73% / 100g (Calorii: 1613 kj/385.5 kCal, Grăsimi: 31.1 g, Carbohidrați: 1.4 g, Proteine: 25 g) – Alergeni = gluten, lapte, ou</p>
       <p style="margin-top: 5px;"><strong>61 LEI / 450g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Tochitura cu mamaliga', 61)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Tochitura cu mamaliga', 61, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Șnițel crocant, cartofi în coajă</h3>
-      <p>(cotlet de porc 200g, cimbru 2g, usturoi 2g, ou 20g, făină 20g, pesmet (sau panko) 30g, cartofi prăjiți 150g, sos de maioneză 50g) Calorii 968,4kCal, Proteine: 51%, Carbohidrați: 4%, Grăsimi: 55% /100g (Calorii 4053kj/968,4kCal, Grăsimi: 61,3g din care saturate 12,3, nesaturate 49g, Zahăr: 1,9g, Fibre: 0,9g, Proteine: 97,7g, Sare: 2390g) – Alergeni: gluten, muștar.</p>
       <p style="margin-top: 5px;"><strong>60 LEI / 450g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Snitel crocant', 60)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Snitel crocant', 60, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Platou 7 Șoapte</h3>
-      <p>(ceafă porc 160g, cârnați cimbru 80g, cârnați afumați 80g, mici/2buc 100g, piept pui 160g, cartofi prăjiți 250g, muștar 30g, mujdei 50g) Calorii 768kCal, Proteine: 56%, Carbohidrați: 5%, Grăsimi: 49% /100g (Calorii 3053kj/768,1kCal, Grăsimi: 49g, saturate 12g, nesaturate 37g, Zahăr: 1,9g, Fibre: 0,9g, Proteine: 97,7g, Sare: 1390g) –Alergeni: gluten, muștar.</p>
       <p style="margin-top: 5px;"><strong>129 LEI / 900g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Platou 7 Soapte', 129)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Platou 7 Soapte', 129, 'mancare')">Adaugă</button>
   </div>
 
   <h2>FELURI PRINCIPALE / Pui 🍗</h2>
@@ -157,28 +171,25 @@
   <div class="produs">
     <div class="detalii">
       <h3>Pui în stil asiatic cu orez</h3>
-      <p>(piept de pui 200g, morcov 30g, ardei kapia 30g, ceapă 30g, usturoi 5g, sos sweet&sour 20g, orez 150g, sos de soia 10g, sare, piper) = calorii 104, Proteine: 81%, Carbohidrați: 2%, Grăsimi: 17% / 100g (Calorii: 435 kj/ 104 kCal, Grăsimi: 2 g din care Saturate: 0.9 g, Carbohidrați: 0.5 g din care Zaharuri: 0.2 g, Fibre: 0.2 g, Proteine: 21 g, Sare: 100 mg) – Alergeni = gluten</p>
       <p style="margin-top: 5px;"><strong>57 LEI / 400g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Pui asiatic', 57)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Pui asiatic', 57, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Fingers pui, cartofi prăjiți</h3>
-      <p>(piept de pui 200g, ou, pesmet, faină, ulei de palmier, cartofi 200g, sos de maioneză 50g, sare, piper)=Calorii: 163 Glucide: 0.4 g, Proteine: 21 g, Grăsimi: 8.1 g, Fibre: 0 g/100g (Calorii: 569 kj/142 kCal, Grăsimi: 6.1g, Carbohidrați: 1 g, Proteine: 16.9 g) – Alergeni = gluten, soia</p>
       <p style="margin-top: 5px;"><strong>56 LEI / 400g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Fingers pui', 56)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Fingers pui', 56, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Burger de pui, cartofi prăjiți</h3>
-      <p>(piept de pui 180g, bechamel: ou, faină 20g, amidon din porumb 10g, sare, boia, piper, bere 30g, ulei, maioneză 30g, salată verde 30g, salată coleslaw 30g, castraveți în oțet 20g, cartofi 150g, maioneză 50g, sare, piper, chiflă 65g)=Calorii: 193 Glucide: 0.5 g, Proteine: 23 g, Grăsimi: 9.1 g, Fibre: 0 g/100g (Calorii: 599 kj/182 kCal, Grăsimi: 5.9g, Carbohidrați: 1 g, Proteine: 17.9 g) – Alergeni = amidon, gluten, ou, soia, lapte, muștar</p>
       <p style="margin-top: 5px;"><strong>58 LEI / 450g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Burger pui', 58)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Burger pui', 58, 'mancare')">Adaugă</button>
   </div>
 
   <h2>FELURI PRINCIPALE / Vită 🍔</h2>
@@ -186,19 +197,17 @@
   <div class="produs">
     <div class="detalii">
       <h3>Burger, cartofi prăjiți</h3>
-      <p>(Burger din vită 160g, chiflă 80g, roșii 30g, salată verde 30g, cașcaval 30g, cartofi 150g, sos maioneză 30g, ketchup 30g /Calorii: 2005, Proteine: 72, Grăsimi: 147, Carbohidrați: 147, Glucide: 81, Sare: 1968mg, Acizi: 18) – Alergeni= gluten, lapte, susan, muștar.</p>
       <p style="margin-top: 5px;"><strong>59 LEI / 500g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Burger vita', 59)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Burger vita', 59, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
-      <h3>Gulaș de vită (întreabă ospătarul)</h3>
-      <p>(carne de vită 150g, ulei 5g, cepe roșii 20g, ceapă galbenă 20g, cartofi 150g, morcovi 10g, roșii, suc de roșii, ardei gras 10g, usturoi, sare, piper, paprica, chimen) = calorii 104, Proteine: 81%, Carbohidrați: 2%, Grăsimi: 17% / 100g (Calorii: 435 kj/ 104 kCal, Grăsimi: 2 g din care Saturate: 0.9 g, Carbohidrați: 0.5 g din care Zaharuri: 0.2 g, Fibre: 0.2 g, Proteine: 21 g, Sare: 100 mg) – Alergeni = gluten</p>
+      <h3>Gulaș de vită</h3>
       <p style="margin-top: 5px;"><strong>61 LEI / 350g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Gulas vita', 61)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Gulas vita', 61, 'mancare')">Adaugă</button>
   </div>
 
   <h2>FELURI PRINCIPALE / Pește 🐟</h2>
@@ -206,19 +215,17 @@
   <div class="produs">
     <div class="detalii">
       <h3>Păstrăv grill cu mămăligă și usturoi</h3>
-      <p>(păstrăv de 300-350g/porție, mălai grișat 100g, sare, piper, ulei, usturoi, lămâie 100g) = calorii 221, Proteine: 60%, Carbohidrați: 0%, Grăsimi: 40% / 100g (Calorii: 599kj/221kCal, Grăsimi: 6g – Saturate: 1.4 g, Ne-Saturate: 3.5 g, Carbohidrați: 0 g, Proteine: 20 g, Sare: 51 mg) – Alergeni = gluten</p>
       <p style="margin-top: 5px;"><strong>61 LEI / 450g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Pastrav grill', 61)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Pastrav grill', 61, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Saramură de păstrăv cu mămăligă</h3>
-      <p>(păstrăv de 300-350g/porție, mălai grișat 100g, sare 5g, piper 2g, ulei, usturoi 10g, ardei gras 20g, ardei kapia 20g, roșie 20g, cimbru, pătrunjel, ardei iute 10g, apă) = calorii 227, Proteine: 60%, Carbohidrați: 0%, Grăsimi: 40% / 100g (Calorii: 629 kj / 227 kCal, Grăsimi: 6 g din care Saturate: 1.4 g, Ne-Saturate: 3.5 g, Carbohidrați: 0 g, Proteine: 20 g, Sare: 51 mg) – Alergeni = gluten</p>
       <p style="margin-top: 5px;"><strong>66 LEI / 500g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Saramura pastrav', 66)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Saramura pastrav', 66, 'mancare')">Adaugă</button>
   </div>
 
   <h2>MÂNCARE CA'N ARDEAL 🥘</h2>
@@ -226,57 +233,51 @@
   <div class="produs">
     <div class="detalii">
       <h3>Mămăligă toponită (straturi)</h3>
-      <p>(cârnați afumați 70g, cârnați proaspeți 70g, telemea de vacă 50g, usturoi, sare, piper și cimbru, mămăligă 200g, 1ou prăjit 50g), = calorii 359, Proteine: 29%, Carbohidrați: 1%, Grăsimi: 70% / 100g (Calorii: 1543 kj/395.5 kCal, Grăsimi: 33.1 g, Carbohidrați: 2.4 g, Proteine: 28 g) – Alergeni = gluten, lapte, ou</p>
       <p style="margin-top: 5px;"><strong>58 LEI / 400g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Mamaliga toponita', 58)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Mamaliga toponita', 58, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Tocana pădurarului cu mămăligă</h3>
-      <p>(pulpă sau spată de porc 150g, cârnați semiafumați 50g, ceapă 30g, morcov 30g, ardei kapia 30g, foi de dafin 3g, chimen 4g, ienibahar 3g, usturoi 20g, roșii pasate 50g, mămăligă 100g), = calorii 389, Proteine: 27%, Carbohidrați: 2%, Grăsimi: 71% / 100g (Calorii: 1663 kj/399.5 kCal, Grăsimi: 32.1 g, Carbohidrați: 2.9 g, Proteine: 38 g) – Alergeni = gluten, lapte, ou, chimen</p>
       <p style="margin-top: 5px;"><strong>59 LEI / 400g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Tocana padurarului', 59)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Tocana padurarului', 59, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Saramură din cocoșel de munte</h3>
-      <p>(500g coquelet de Bretagne, roșii 50g, ardei verde 20g, kapia 20g, sare 3g, piper 2g, mămăligă 100g, ardei iute 20g, usturoi 10g, cimbru 5g) = calorii 319, Proteine: 31%, Carbohidrați: 3%, Grăsimi: 64% / 100g (Calorii: 1693 kj/319.3 kCal, Grăsimi: 38.1 g, Carbohidrați: 2.7g, Proteine: 39g) – Alergeni = gluten, lapte.</p>
       <p style="margin-top: 5px;"><strong>71 LEI / 700g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Saramura cocosel', 71)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Saramura cocosel', 71, 'mancare')">Adaugă</button>
   </div>
 
   <h2>PASTE 🍝</h2>
 
   <div class="produs">
     <div class="detalii">
-      <h3>Penne cu sos alb (Alias Carbonara)</h3>
-      <p>(penne 200g, parmezan 50g, bacon 80g, smântână lichidă 100 g, gălbenuș ou, sare, piper, parmezan sau grand padano) = calorii 837 Proteine: 14%, Carbohidrați: 31%, Grăsimi: 55%/100 g (Calorii 3505 kj / 837.77 kCal, Grăsimi: 50.98 g din care Saturate: 23.73 g, Ne-Saturate: 4.84 g, Colesterol: 370.2 mg, Carbohidrați: 66.25 g din care Zaharuri: 6.44 g, Fibre: 4.33 g, Proteine: 30.41 g, Sare: 4249.2 mg) – Alergeni = gluten, ou, lapte</p>
+      <h3>Penne cu sos alb (Carbonara)</h3>
       <p style="margin-top: 5px;"><strong>42 LEI / 350g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Penne sos alb', 42)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Penne sos alb', 42, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
-      <h3>Penne cu sos roșu / Home Made</h3>
-      <p>(Penne 200g, bacon 70g, ciuperci 30g, parmezan sau grand padano 50g, suc de roșii, roșii bucăți 170g, sare, piper) = calorii 357kCal, Carbohidrați: 57,3g, Proteine: 06g, Grăsimi: 10,5g /100 g – Alergeni = gluten, ciuperci, lapte</p>
+      <h3>Penne cu sos roșu</h3>
       <p style="margin-top: 5px;"><strong>43 LEI / 350g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Penne sos rosu', 43)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Penne sos rosu', 43, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
-      <h3>Penne cu sos de roșii / Home Made (Vegan)</h3>
-      <p>(Penne 200g, parmezan sau grand padano 50g, suc de roșii, roșii bucăți 170g, sare, piper) = calorii 357kCal, Carbohidrați: 57,3g, Proteine: 06g, Grăsimi: 10,5g /100 g – Alergeni = gluten, lapte</p>
+      <h3>Penne cu sos de roșii (Vegan)</h3>
       <p style="margin-top: 5px;"><strong>40 LEI / 320g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Penne rosii vegan', 40)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Penne rosii vegan', 40, 'mancare')">Adaugă</button>
   </div>
 
   <h2>FĂRĂ CARNE 🌱</h2>
@@ -284,28 +285,25 @@
   <div class="produs">
     <div class="detalii">
       <h3>Cașcaval Pane & Sos Sweet Chilly</h3>
-      <p>(Cașcaval 180g, ou, pesmet, sare, piper, mix salată 50g, sos sweet chilly 50g) = calorii 457kCal, Carbohidrați: 58,4g, Proteine: 12g, Grăsimi: 17,5g /100 g – Alergeni = gluten, lapte, ou</p>
       <p style="margin-top: 5px;"><strong>34 LEI / 280g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Cascaval pane', 34)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Cascaval pane', 34, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Salată 7 Șoapte</h3>
-      <p>(Mix de salată 200g, roșii 100g, castraveți 50g, ceapă 30g, telemea de vacă 100g, ulei de măsline 20g) = calorii 307kCal, Proteine: 30%, Carbohidrați: 0%, Grăsimi: 70% Calorii 1192 kj / 307 kCal, Grăsimi 20.4g, Carbohidrați 0g, Proteine 19.4g – Alergeni = gluten, lapte, ou</p>
       <p style="margin-top: 5px;"><strong>32 LEI / 400g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Salata 7 Soapte', 32)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Salata 7 Soapte', 32, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Arancini cu Sos Ragu Vegan</h3>
-      <p>(Orez fiert 150 g, grand padano 30g, ciuperci 20g, ardei kapia 20g, ceapa 20g, morcov 20g, branza moale 20g, sos: ceapă 30g, ardei diverse sortimente 100g, roșii cuburi/conservă - 100g, cimbru 5g, ustroi 5g, ou 30g, făina 20g, pesmet 30g, ulei de măsline 20g) = calorii 174kCal, Proteine: 13%, Carbohidrați: 65%, Grăsimi: 22% Calorii 728 kj/ 174kCal, Grăsimi: 4.3 g, Carbohidrați 27.7g/ Zaharuri 3.1 g, Fibre 1.1 g, Proteine 5.5 g, Sare 930 mg. Alergeni = gluten, lapte, ou</p>
       <p style="margin-top: 5px;"><strong>41 LEI / 400g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Arancini vegan', 41)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Arancini vegan', 41, 'mancare')">Adaugă</button>
   </div>
 
   <h2>GARNITURI 🍟</h2>
@@ -315,7 +313,7 @@
       <h3>Cartofi proaspeți prăjiți</h3>
       <p style="margin-top: 5px;"><strong>14 LEI / 200g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Cartofi prajiti', 14)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Cartofi prajiti', 14, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -323,7 +321,7 @@
       <h3>Piure de cartofi cu trufe</h3>
       <p style="margin-top: 5px;"><strong>14 LEI / 200g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Piure trufe', 14)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Piure trufe', 14, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -331,7 +329,7 @@
       <h3>Mămăligă</h3>
       <p style="margin-top: 5px;"><strong>6 LEI / 150g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Mamaliga garnitura', 6)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Mamaliga garnitura', 6, 'mancare')">Adaugă</button>
   </div>
 
   <h2>SOSURI 🥣</h2>
@@ -341,7 +339,7 @@
       <h3>Ketchup / muștar / maioneză</h3>
       <p style="margin-top: 5px;"><strong>6 LEI / 50g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Ketchup/mustar/maioneza', 6)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Ketchup/mustar/maioneza', 6, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -349,16 +347,15 @@
       <h3>Sos aioli (maioneză, usturoi)</h3>
       <p style="margin-top: 5px;"><strong>9 LEI / 50g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Sos aioli', 9)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Sos aioli', 9, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Sarmuzac (maioneză de usturoi)</h3>
-      <p>(usturoi, ulei, sare, oțet)</p>
       <p style="margin-top: 5px;"><strong>11 LEI / 50g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Sarmuzac', 11)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Sarmuzac', 11, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -366,16 +363,15 @@
       <h3>Smântână</h3>
       <p style="margin-top: 5px;"><strong>6 LEI / 50g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Smantana sos', 6)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Smantana sos', 6, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Mujdei de usturoi</h3>
-      <p>(usturoi, sare, ulei, apă minerală)</p>
       <p style="margin-top: 5px;"><strong>8 LEI / 50g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Mujdei', 8)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Mujdei', 8, 'mancare')">Adaugă</button>
   </div>
 
   <h2>SALATE 🥗</h2>
@@ -383,28 +379,25 @@
   <div class="produs">
     <div class="detalii">
       <h3>Salată de varză albă</h3>
-      <p>(varză albă, ulei, oțet, sare)</p>
       <p style="margin-top: 5px;"><strong>9 LEI / 150g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Salata varza', 9)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Salata varza', 9, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Salată de castraveți oțet</h3>
-      <p>(castraveți, oțet, mărar)</p>
       <p style="margin-top: 5px;"><strong>10 LEI / 150g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Salata castraveti', 10)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Salata castraveti', 10, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Salată asortată</h3>
-      <p>(roșii, castraveți, ulei)</p>
       <p style="margin-top: 5px;"><strong>12 LEI / 150g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Salata asortata', 12)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Salata asortata', 12, 'mancare')">Adaugă</button>
   </div>
 
   <h2>LA CERERE 🧂</h2>
@@ -414,7 +407,7 @@
       <h3>Pâine cu fulgi de cartofi</h3>
       <p style="margin-top: 5px;"><strong>5 LEI / 100g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Paine cu fulgi cartofi', 5)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Paine cu fulgi cartofi', 5, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -422,7 +415,7 @@
       <h3>Ardei iute</h3>
       <p style="margin-top: 5px;"><strong>4 LEI / buc</strong></p>
     </div>
-    <button onclick="adaugaInCos('Ardei iute', 4)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Ardei iute', 4, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -430,7 +423,7 @@
       <h3>Smântână</h3>
       <p style="margin-top: 5px;"><strong>6 LEI / 50g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Smantana extra', 6)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Smantana extra', 6, 'mancare')">Adaugă</button>
   </div>
 
   <h2>DESERT 🍰</h2>
@@ -438,28 +431,25 @@
   <div class="produs">
     <div class="detalii">
       <h3>Papanași cu dulceață și smântână</h3>
-      <p>(brânză de vaci, făină, sare, bicarbonat de sodiu alimentar, plic de zahăr vanilat, ouă întregi, coaja rasă de lămâie, smântână, dulceață diverse sortimente) = calorii 235 (Proteine: 17%, Carbohidrați: 17%, Grăsimi: 66% / 100g (Calorii: 983 kj / 235 kCal, Grăsimi: 17.2 g, Carbohidrați: 10 g, Proteine: 10 g) – Alergeni = gluten, ou, lapte</p>
       <p style="margin-top: 5px;"><strong>32 LEI / 180g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Papanasi', 32)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Papanasi', 32, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Clătite cu gem și finetti</h3>
-      <p>(50 ml lapte, 1/2 linguriță făină, 1 esență de lămâie, gem 30g, finetti 30g) = calorii 330, Proteine: 3%, Carbohidrați: 49%, Grăsimi: 48% (Calorii: 1381 kj / 330 kCal, Grăsimi: 17 g, Carbohidrați: 39.4 g, Proteine: 2.7 g) – Alergeni = gluten, ou, lapte</p>
       <p style="margin-top: 5px;"><strong>21 LEI / 150g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Clatite gem/finetti', 21)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Clatite gem/finetti', 21, 'mancare')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Prăjitură de casă TIRAMISU</h3>
-      <p>(25 g mascarpone, 1 albuș, 1 lingură vanilie, sare, 50 ml, 1 gălbenuș, 3 pișcoturi șampanie) = calorii 305, Proteine: 17%, Carbohidrați: 73%, Grăsimi: 10% / 100g (Calorii: 499 kj / 305 kCal, Grăsimi: 1.3 g, Carbohidrați: 21.9 g, Fibre: 0.7 g, Proteine: 5 g) – Alergeni = gluten, ou, lapte</p>
       <p style="margin-top: 5px;"><strong>29 LEI / 150g</strong></p>
     </div>
-    <button onclick="adaugaInCos('Tiramisu', 29)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Tiramisu', 29, 'mancare')">Adaugă</button>
   </div>
 
   <h2>VIN 🍷</h2>
@@ -469,7 +459,7 @@
       <h3>Vinul casei alb/roșu (150 ml/pahar)</h3>
       <p style="margin-top: 5px;"><strong>16 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Vinul casei pahar', 16)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Vinul casei pahar', 16, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -477,7 +467,7 @@
       <h3>Vinul casei alb/roșu (1l/carafă)</h3>
       <p style="margin-top: 5px;"><strong>69 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Vinul casei carafa', 69)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Vinul casei carafa', 69, 'bautura')">Adaugă</button>
   </div>
   
   <div class="info-box">
@@ -493,7 +483,7 @@
       <h3>Apă plată/minerală (sticlă) 750 ml</h3>
       <p style="margin-top: 5px;"><strong>16 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Apa 750ml', 16)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Apa 750ml', 16, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -501,7 +491,7 @@
       <h3>Apă plată/minerală 500 ml</h3>
       <p style="margin-top: 5px;"><strong>10 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Apa 500ml', 10)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Apa 500ml', 10, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -509,7 +499,7 @@
       <h3>Fanta, Cola, Sprite 500 ml</h3>
       <p style="margin-top: 5px;"><strong>14 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Suc 500ml', 14)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Suc 500ml', 14, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -517,7 +507,7 @@
       <h3>Fanta, Cola, Sprite 1,50 L</h3>
       <p style="margin-top: 5px;"><strong>23 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Suc 1.5L', 23)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Suc 1.5L', 23, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -525,7 +515,7 @@
       <h3>Nestea (lămâie, piersică) 500 ml</h3>
       <p style="margin-top: 5px;"><strong>14 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Nestea', 14)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Nestea', 14, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -533,7 +523,7 @@
       <h3>Limonadă (lămâie, miere, apă) 450 ml</h3>
       <p style="margin-top: 5px;"><strong>25 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Limonada', 25)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Limonada', 25, 'bautura')">Adaugă</button>
   </div>
 
   <h2>BERE 🍺</h2>
@@ -543,7 +533,7 @@
       <h3>Ursus (sticlă 330 ml)</h3>
       <p style="margin-top: 5px;"><strong>14 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Ursus 330ml', 14)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Ursus 330ml', 14, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -551,7 +541,7 @@
       <h3>Bucur (bere artizanală/sticlă 350 ml)</h3>
       <p style="margin-top: 5px;"><strong>16 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Bucur 350ml', 16)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Bucur 350ml', 16, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -559,7 +549,7 @@
       <h3>Timișoreana (0% alcool) 500 ml (doză)</h3>
       <p style="margin-top: 5px;"><strong>12 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Timisoreana 0%', 12)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Timisoreana 0%', 12, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -567,7 +557,7 @@
       <h3>Ciuc (sticlă 500 ml)</h3>
       <p style="margin-top: 5px;"><strong>14 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Ciuc 500ml', 14)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Ciuc 500ml', 14, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -575,7 +565,7 @@
       <h3>Heineken (sticlă 400 ml)</h3>
       <p style="margin-top: 5px;"><strong>16 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Heineken 400ml', 16)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Heineken 400ml', 16, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -583,7 +573,7 @@
       <h3>Amstel (sticlă 500 ml)</h3>
       <p style="margin-top: 5px;"><strong>16 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Amstel 500ml', 16)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Amstel 500ml', 16, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -591,7 +581,7 @@
       <h3>Birra Moretti (sticlă 500 ml)</h3>
       <p style="margin-top: 5px;"><strong>16 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Birra Moretti 500ml', 16)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Birra Moretti 500ml', 16, 'bautura')">Adaugă</button>
   </div>
 
   <h2>ALCOOL 🥃</h2>
@@ -601,7 +591,7 @@
       <h3>Jameson *Whisky 50ml</h3>
       <p style="margin-top: 5px;"><strong>24 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Jameson', 24)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Jameson', 24, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -609,7 +599,7 @@
       <h3>Absolut *Vodka 50 ml</h3>
       <p style="margin-top: 5px;"><strong>23 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Absolut', 23)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Absolut', 23, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -617,7 +607,7 @@
       <h3>Jagermeister *Lichior 50 ml</h3>
       <p style="margin-top: 5px;"><strong>21 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Jagermeister', 21)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Jagermeister', 21, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -625,7 +615,7 @@
       <h3>Captain Morgan *Rom 50 ml</h3>
       <p style="margin-top: 5px;"><strong>21 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Captain Morgan', 21)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Captain Morgan', 21, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -633,15 +623,15 @@
       <h3>Metaxa *Cognac (5 stele) 50 ml</h3>
       <p style="margin-top: 5px;"><strong>24 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Metaxa', 24)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Metaxa', 24, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
-      <h3>Țuică (învechită 5 ani în butoi de dud - 43°)</h3>
+      <h3>Țuică (învechită 5 ani)</h3>
       <p style="margin-top: 5px;"><strong>21 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Tuica', 21)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Tuica', 21, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -649,7 +639,7 @@
       <h3>Pălincă (de prune)</h3>
       <p style="margin-top: 5px;"><strong>23 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Palinca', 23)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Palinca', 23, 'bautura')">Adaugă</button>
   </div>
 
   <h2>COCKTAIL 🍹</h2>
@@ -657,37 +647,33 @@
   <div class="produs">
     <div class="detalii">
       <h3>Cuba Libre</h3>
-      <p>(30ml rom, 90 ml coca cola, felii de lime, cuburi de gheață)</p>
       <p style="margin-top: 5px;"><strong>32 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Cuba Libre', 32)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Cuba Libre', 32, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Screwdriver</h3>
-      <p>(50 ml vodka, gheața, 120 ml suc de portocală)</p>
       <p style="margin-top: 5px;"><strong>30 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Screwdriver', 30)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Screwdriver', 30, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Campari Orange</h3>
-      <p>(50 ml campari, 150 ml suc de portocale, gheața)</p>
       <p style="margin-top: 5px;"><strong>31 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Campari Orange', 31)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Campari Orange', 31, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
     <div class="detalii">
       <h3>Gin Tonic</h3>
-      <p>(50 ml gin, 150 ml apa tonică, lămâie, gheață)</p>
       <p style="margin-top: 5px;"><strong>30 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Gin Tonic', 30)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Gin Tonic', 30, 'bautura')">Adaugă</button>
   </div>
 
   <h2>CAFEA ☕</h2>
@@ -697,7 +683,7 @@
       <h3>Ristretto</h3>
       <p style="margin-top: 5px;"><strong>12 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Ristretto', 12)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Ristretto', 12, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -705,7 +691,7 @@
       <h3>Espresso scurt, lung, dublu</h3>
       <p style="margin-top: 5px;"><strong>12 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Espresso', 12)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Espresso', 12, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -713,7 +699,7 @@
       <h3>Cappuccino</h3>
       <p style="margin-top: 5px;"><strong>16 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Cappuccino', 16)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Cappuccino', 16, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -721,7 +707,7 @@
       <h3>Barista</h3>
       <p style="margin-top: 5px;"><strong>16 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Barista', 16)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Barista', 16, 'bautura')">Adaugă</button>
   </div>
 
   <div class="produs">
@@ -729,34 +715,95 @@
       <h3>Caffe Latte</h3>
       <p style="margin-top: 5px;"><strong>16 LEI</strong></p>
     </div>
-    <button onclick="adaugaInCos('Caffe Latte', 16)">Adaugă</button>
+    <button class="btn-adauga" onclick="adaugaInCos('Caffe Latte', 16, 'bautura')">Adaugă</button>
   </div>
 
-  <div id="cos">
-    <h2>Coșul tău 🛒</h2>
-    <ul id="lista-cos"></ul>
-    <p><strong>Total: <span id="total-cos">0</span> LEI</strong></p>
-    
-    <button id="btn-whatsapp" onclick="trimiteComanda()">Trimite comanda pe WhatsApp</button>
+
+  <div id="cart-button" onclick="toggleCart()">
+    🛒
+    <span id="cart-badge">0</span>
   </div>
+
+  <div id="overlay" onclick="toggleCart()"></div>
+
+  <div id="cart-panel">
+    <button class="inchide-cos" onclick="toggleCart()">✖ Închide coșul</button>
+    
+    <div class="sumar-categorii">
+      <p>🍔 Mâncăruri adăugate: <span id="count-mancare">0</span></p>
+      <p>🥤 Băuturi adăugate: <span id="count-bautura">0</span></p>
+    </div>
+
+    <ul id="lista-cos">
+      </ul>
+    
+    <div class="total-container">
+      <strong>Total: <span id="total-cos">0</span> LEI</strong>
+    </div>
+    
+    <button id="btn-whatsapp" onclick="trimiteComanda()">Trimite pe WhatsApp</button>
+  </div>
+
 
   <script>
     let cos = [];
     let total = 0;
+    let totalMancare = 0;
+    let totalBautura = 0;
 
-    function adaugaInCos(numeProdus, pret) {
-      cos.push({ nume: numeProdus, pret: pret });
+    // Acum funcția primește și categoria (mancare / bautura)
+    function adaugaInCos(numeProdus, pret, categorie) {
+      cos.push({ nume: numeProdus, pret: pret, categorie: categorie });
+      
       total += pret;
+      if(categorie === 'mancare') totalMancare++;
+      if(categorie === 'bautura') totalBautura++;
+      
+      actualizeazaCos();
+      
+      // Mici animații opționale
+      let badge = document.getElementById('cart-badge');
+      badge.style.transform = 'scale(1.5)';
+      setTimeout(() => { badge.style.transform = 'scale(1)'; }, 200);
+    }
+
+    function stergeDinCos(index) {
+      let produs = cos[index];
+      total -= produs.pret;
+      if(produs.categorie === 'mancare') totalMancare--;
+      if(produs.categorie === 'bautura') totalBautura--;
+      
+      cos.splice(index, 1); // ștergem produsul
       actualizeazaCos();
     }
 
     function actualizeazaCos() {
       let lista = document.getElementById('lista-cos');
       lista.innerHTML = '';
-      cos.forEach(item => {
-        lista.innerHTML += `<li>${item.nume} - ${item.pret} LEI</li>`;
+      
+      cos.forEach((item, index) => {
+        // Am pus un mic buton "X" pentru a putea șterge produsul
+        lista.innerHTML += `
+          <li>
+            <span>${item.nume}</span> 
+            <span>${item.pret} LEI <button class="btn-sterge" onclick="stergeDinCos(${index})">X</button></span>
+          </li>`;
       });
+
+      // Actualizăm numerele afișate pe ecran
       document.getElementById('total-cos').innerText = total;
+      document.getElementById('count-mancare').innerText = totalMancare;
+      document.getElementById('count-bautura').innerText = totalBautura;
+      document.getElementById('cart-badge').innerText = cos.length;
+    }
+
+    // Funcția care deschide / închide panoul din dreapta
+    function toggleCart() {
+      let panel = document.getElementById('cart-panel');
+      let overlay = document.getElementById('overlay');
+      
+      panel.classList.toggle('open');
+      overlay.classList.toggle('active');
     }
 
     function trimiteComanda() {
@@ -765,11 +812,15 @@
         return;
       }
 
-      // Preia numărul camerei din căsuța aflată acum sus
       let numarCamera = document.getElementById('numar-camera').value;
-      
+      if(numarCamera.trim() === "") {
+        alert("Te rugăm să completezi numărul camerei sau al mesei în partea de sus a paginii!");
+        toggleCart(); // Închidem coșul ca să poată vedea căsuța
+        window.scrollTo(0, 0); // Îl ducem sus pe pagină
+        return;
+      }
+
       let textComanda = "Bună ziua! Doresc să comand următoarele:\n\n";
-      
       let contineMicDejun = false;
 
       cos.forEach(item => {
@@ -791,9 +842,9 @@
       }
 
       let textCodificat = encodeURIComponent(textComanda);
-      
       let numarTelefon = "40743113753"; 
       let linkWhatsapp = `https://wa.me/${numarTelefon}?text=${textCodificat}`;
+      
       window.open(linkWhatsapp, '_blank');
     }
   </script>
